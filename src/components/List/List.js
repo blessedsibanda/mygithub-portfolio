@@ -1,15 +1,27 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const ListWrapper = styled.ul`
+	list-style: none;
+	padding: 0;
+	text-align: left;
+`;
+
+const ListItem = styled.li`
+	display: flex;
+	justify-content: space-between;
+`;
 
 const List = ({ items }) => {
 	return (
-		<ul>
+		<ListWrapper>
 			{items.map((item) => (
-				<li key={item.label}>
+				<ListItem key={item.label}>
 					<strong>{item.label}</strong>
 					{item.value}
-				</li>
+				</ListItem>
 			))}
-		</ul>
+		</ListWrapper>
 	);
 };
 
