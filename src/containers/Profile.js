@@ -16,26 +16,34 @@ class Profile extends Component {
 		this.state = {
 			data: {},
 			repositories: [],
-			loading: true
+			loading: true,
+			error: ''
 		};
 	}
 
 	async componentDidMount() {
-		const profile = await fetch('https://api.github.com/users/blessedsibanda');
-		const profileJSON = await profile.json();
+		try {
+			const profile = await fetch('https://api.github.com/users/blessedsibanda');
+			const profileJSON = await profile.json();
 
-		if (profileJSON) {
-			const repositories = await fetch(profileJSON.repos_url);
-			const repositoriesJSON = await repositories.json();
+			if (profileJSON) {
+				const repositories = await fetch(profileJSON.repos_url);
+				const repositoriesJSON = await repositories.json();
+				this.setState({
+					data: profileJSON,
+					repositories: repositoriesJSON,
+					loading: false
+				});
+			}
+		} catch (err) {
 			this.setState({
-				data: profileJSON,
-				repositories: repositoriesJSON,
-				loading: false
+				loading: false,
+				error: err.message
 			});
 		}
 	}
 	render() {
-		const { data, loading, repositories } = this.state;
+		const { data, loading, repositories, error } = this.state;
 		const items = [
 			{ label: 'html_url', value: <Link url={data.html_url} title="Github URL" /> },
 			{ label: 'repos_url', value: data.repos_url },
@@ -51,8 +59,8 @@ class Profile extends Component {
 			value: <Link url={repository.html_url} title="Github URL" />
 		}));
 
-		if (loading) {
-			return <div>Loading...</div>;
+		if (loading || error) {
+			return <div>{loading ? 'Loading...' : error}</div>;
 		}
 		return (
 			<ProfileWrapper>
