@@ -12,16 +12,24 @@ const ListItem = styled.li`
 	justify-content: space-between;
 `;
 
-const List = ({ items }) => {
+const Title = styled.h2`
+	padding: 10px 0;
+	border-bottom: 1px solid lightGrey;
+`;
+
+const List = ({ items, title }) => {
 	return (
-		<ListWrapper>
-			{items.map((item) => (
-				<ListItem key={item.label}>
-					<strong>{item.label}</strong>
-					{item.value}
-				</ListItem>
-			))}
-		</ListWrapper>
+		<React.Fragment>
+			<Title>{title}</Title>
+			<ListWrapper>
+				{items.map((item) => (
+					<ListItem key={item.label}>
+						<strong>{item.label}</strong>
+						{item.value}
+					</ListItem>
+				))}
+			</ListWrapper>
+		</React.Fragment>
 	);
 };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import './Header.css';
 import styled from 'styled-components';
 import Link from '../Link/Link';
 

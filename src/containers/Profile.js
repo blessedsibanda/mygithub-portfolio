@@ -15,6 +15,7 @@ class Profile extends Component {
 		super();
 		this.state = {
 			data: {},
+			repositories: [],
 			loading: true
 		};
 	}
@@ -24,14 +25,17 @@ class Profile extends Component {
 		const profileJSON = await profile.json();
 
 		if (profileJSON) {
+			const repositories = await fetch(profileJSON.repos_url);
+			const repositoriesJSON = await repositories.json();
 			this.setState({
 				data: profileJSON,
+				repositories: repositoriesJSON,
 				loading: false
 			});
 		}
 	}
 	render() {
-		const { data, loading } = this.state;
+		const { data, loading, repositories } = this.state;
 		const items = [
 			{ label: 'html_url', value: <Link url={data.html_url} title="Github URL" /> },
 			{ label: 'repos_url', value: data.repos_url },
@@ -42,13 +46,19 @@ class Profile extends Component {
 			{ label: 'bio', value: data.bio }
 		];
 
+		const projects = repositories.map((repository) => ({
+			label: repository.name,
+			value: <Link url={repository.html_url} title="Github URL" />
+		}));
+
 		if (loading) {
 			return <div>Loading...</div>;
 		}
 		return (
 			<ProfileWrapper>
 				<Avatar src={data.avatar_url} alt="avatar" />
-				<List items={items} />
+				<List title="Profile" items={items} />
+				<List title="Projects" items={projects} />
 			</ProfileWrapper>
 		);
 	}
